@@ -165,9 +165,14 @@ class Chunk:
                         state.get('Properties').to_dict() if state.has('Properties') else {}
                     ) for state in section.get('Palette').children
                 ]
+            elif section.get('Y').tag_value >= 0:
+                # Sections with only air will be filled with air - @IsItGreg
+                states = [0] * 16**3
+                palette = [ BlockState('minecraft:air', {}) ]
             else:
                 # Nor any palette entries.
-                palette = None
+                palette = []                
+
             block_lights = Chunk._divide_nibbles(section.get('BlockLight').get()) if section.has('BlockLight') else None
             sky_lights = Chunk._divide_nibbles(section.get('SkyLight').get()) if section.has('SkyLight') else None
             blocks = []
